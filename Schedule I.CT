@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>33</ID>
+      <Description>"INFINITE STAMINA"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : Schedule I
+  Version: 
+  Date   : 2025-04-02
+  Author : erbu0
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(INJECT,GameAssembly.dll,F3 0F 11 B3 B8 00 00 00 40) // should be unique
+alloc(newmem,$1000,INJECT)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  nop
+  jmp return
+
+INJECT:
+  jmp newmem
+  nop 3
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT:
+  db F3 0F 11 B3 B8 00 00 00
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: GameAssembly.dll+6C0FDC
+
+GameAssembly.dll+6C0FBB: 48 8B 80 B8 00 00 00     - mov rax,[rax+000000B8]
+GameAssembly.dll+6C0FC2: 0F 57 C9                 - xorps xmm1,xmm1
+GameAssembly.dll+6C0FC5: 0F 2F CE                 - comiss xmm1,xmm6
+GameAssembly.dll+6C0FC8: F3 0F 10 40 24           - movss xmm0,[rax+24]
+GameAssembly.dll+6C0FCD: 77 0A                    - ja GameAssembly.dll+6C0FD9
+GameAssembly.dll+6C0FCF: 0F 2F F0                 - comiss xmm6,xmm0
+GameAssembly.dll+6C0FD2: 76 08                    - jna GameAssembly.dll+6C0FDC
+GameAssembly.dll+6C0FD4: 0F 28 F0                 - movaps xmm6,xmm0
+GameAssembly.dll+6C0FD7: EB 03                    - jmp GameAssembly.dll+6C0FDC
+GameAssembly.dll+6C0FD9: 0F 57 F6                 - xorps xmm6,xmm6
+// ---------- INJECTING HERE ----------
+GameAssembly.dll+6C0FDC: F3 0F 11 B3 B8 00 00 00  - movss [rbx+000000B8],xmm6
+// ---------- DONE INJECTING  ----------
+GameAssembly.dll+6C0FE4: 40 84 FF                 - test dil,dil
+GameAssembly.dll+6C0FE7: 74 23                    - je GameAssembly.dll+6C100C
+GameAssembly.dll+6C0FE9: 48 83 BB C0 00 00 00 00  - cmp qword ptr [rbx+000000C0],00
+GameAssembly.dll+6C0FF1: 74 19                    - je GameAssembly.dll+6C100C
+GameAssembly.dll+6C0FF3: 48 8B 83 C0 00 00 00     - mov rax,[rbx+000000C0]
+GameAssembly.dll+6C0FFA: F3 0F 5C F7              - subss xmm6,xmm7
+GameAssembly.dll+6C0FFE: 4C 8B 40 28              - mov r8,[rax+28]
+GameAssembly.dll+6C1002: 48 8B 48 40              - mov rcx,[rax+40]
+GameAssembly.dll+6C1006: 0F 28 CE                 - movaps xmm1,xmm6
+GameAssembly.dll+6C1009: FF 50 18                 - call qword ptr [rax+18]
+}
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Code :movss [rcx+38],xmm1</Description>
+      <AddressString>GameAssembly.dll+83344E</AddressString>
+      <Before>
+        <Byte>57</Byte>
+        <Byte>C9</Byte>
+        <Byte>0F</Byte>
+        <Byte>2F</Byte>
+        <Byte>D1</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>49</Byte>
+        <Byte>38</Byte>
+      </Actual>
+      <After>
+        <Byte>72</Byte>
+        <Byte>16</Byte>
+        <Byte>48</Byte>
+        <Byte>83</Byte>
+        <Byte>79</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>
