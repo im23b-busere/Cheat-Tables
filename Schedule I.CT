@@ -70,6 +70,76 @@ GameAssembly.dll+6C1009: FF 50 18                 - call qword ptr [rax+18]
 }
 </AssemblerScript>
     </CheatEntry>
+    <CheatEntry>
+      <ID>36</ID>
+      <Description>"UNLIMITED AMMO"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : Schedule I
+  Version: 
+  Date   : 2025-04-03
+  Author : erbu0
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(INJECT,GameAssembly.dll,FF 49 38 4C 39 79 28) // should be unique
+alloc(newmem,$1000,INJECT)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  nop
+  cmp [rcx+28],r15
+  jmp return
+
+INJECT:
+  jmp newmem
+  nop 2
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT:
+  db FF 49 38 4C 39 79 28
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: GameAssembly.dll+83CDAF
+
+GameAssembly.dll+83CD7A: E8 21 49 E6 FF           - call GameAssembly.dll+6A16A0
+GameAssembly.dll+83CD7F: 48 8B 8E B0 00 00 00     - mov rcx,[rsi+000000B0]
+GameAssembly.dll+83CD86: 48 85 C9                 - test rcx,rcx
+GameAssembly.dll+83CD89: 0F 84 3F 0A 00 00        - je GameAssembly.dll+83D7CE
+GameAssembly.dll+83CD8F: 48 8B 01                 - mov rax,[rcx]
+GameAssembly.dll+83CD92: 48 8B 90 80 01 00 00     - mov rdx,[rax+00000180]
+GameAssembly.dll+83CD99: FF 90 78 01 00 00        - call qword ptr [rax+00000178]
+GameAssembly.dll+83CD9F: 48 8B 8E 68 01 00 00     - mov rcx,[rsi+00000168]
+GameAssembly.dll+83CDA6: 48 85 C9                 - test rcx,rcx
+GameAssembly.dll+83CDA9: 0F 84 1F 0A 00 00        - je GameAssembly.dll+83D7CE
+// ---------- INJECTING HERE ----------
+GameAssembly.dll+83CDAF: FF 49 38                 - dec [rcx+38]
+// ---------- DONE INJECTING  ----------
+GameAssembly.dll+83CDB2: 4C 39 79 28              - cmp [rcx+28],r15
+GameAssembly.dll+83CDB6: 74 0F                    - je GameAssembly.dll+83CDC7
+GameAssembly.dll+83CDB8: 48 8B 41 28              - mov rax,[rcx+28]
+GameAssembly.dll+83CDBC: 48 8B 50 28              - mov rdx,[rax+28]
+GameAssembly.dll+83CDC0: 48 8B 48 40              - mov rcx,[rax+40]
+GameAssembly.dll+83CDC4: FF 50 18                 - call qword ptr [rax+18]
+GameAssembly.dll+83CDC7: F3 0F 10 86 94 00 00 00  - movss xmm0,[rsi+00000094]
+GameAssembly.dll+83CDCF: 45 0F 57 C0              - xorps xmm8,xmm8
+GameAssembly.dll+83CDD3: 44 0F 2F C0              - comiss xmm8,xmm0
+GameAssembly.dll+83CDD7: F3 0F 10 96 E0 00 00 00  - movss xmm2,[rsi+000000E0]
+}
+</AssemblerScript>
+    </CheatEntry>
   </CheatEntries>
   <CheatCodes>
     <CodeEntry>
